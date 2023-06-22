@@ -41,7 +41,9 @@ def bot_play(g: Game):
     if g.history != []:
         h = [g.history[-1]]
     r = Rose(Game(h,g.board))
-    return decide(r)
+    d = decide(r)
+    g.choose(d)
+    return d
 
 def main():
     print("Enter 0 to quit")

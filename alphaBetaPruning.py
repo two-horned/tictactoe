@@ -5,13 +5,13 @@ from game import Game
 from rose import Rose
 from copy import deepcopy
 
-def decide(rose: Rose) -> Game:
+def decide(rose: Rose) -> int:
     eval(rose)
     print("This is the best path I see: {}".format(rose.data.history))
     g = rose.data
     if len(g.history) < 2:
         quit("there was nothing to do")
-    return g.history[1]
+    return abs(g.history[1])
 
 def allfinished(rose: Rose):
     b = True
