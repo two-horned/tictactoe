@@ -1,10 +1,10 @@
 # C: Said Kadrioski <said@kadrioski.de>
 
 class Rose:
-    def __init__(self,data):
-        self.father: None|Rose    = None
+    def __init__(self,data, father:'Rose|None' = None):
+        self.father               = father
         self.data                 = data
-        self.children: list[Rose] = []
+        self.children: list[Rose] = [] 
 
     def leaves(self):
         l: list[Rose] = []
@@ -17,9 +17,15 @@ class Rose:
                 q.append(j)
         return l
 
+    def makechild(self,child: 'Rose'):
+        child.father = self
+        self.children.append(child)
+
+    def makefather(self,father: 'Rose'):
+        father.makechild(self)
+
     def __str__(self):
         s = str(self.data)
-        s += '\n' + '----|' + '\t'
         for i in self.children:
-            s += str(i) + '\t' + '--|--'
+            s += '\n' + '⎣⎯⎯⎯⎯⎯⎯ ' + '\t'.join(str(i).splitlines(True))
         return s
