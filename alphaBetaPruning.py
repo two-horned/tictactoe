@@ -22,11 +22,8 @@ def decide(rose: Rose) -> int:
         quit("there was nothing to do")
     return abs(g.history[1])
 
-def allfinished(rose: Rose):
-    b = True
-    for i in rose.children:
-        b = b and i.data.finished()
-    return b
+def prunable(rose: Rose,child: Rose):
+    return rose.children[0] == child
 
 def minmax(rose: Rose):
     n = rose.children[0]
@@ -49,7 +46,7 @@ def prune(rose: Rose):
         f.update({h : r})
         r.data = minmax(r).data
         r.children = []
-        if r.father != None and allfinished(r.father):
+        if r.father != None and  prunable(r.father,r): 
             q.append(r.father)
     return f
 
@@ -78,8 +75,7 @@ def eval(rose: Rose):
             if n != None:
                 r.data.board = n.data.board
                 r.data.history += n.data.history[len(h):]
-
-        if r.data.finished() and r.father != None and allfinished(r.father):
+        if r.data.finished() and r.father != None and  prunable(r.father,r):
             f.update(prune(r.father))
 
 def benchmark():
