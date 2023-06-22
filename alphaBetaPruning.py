@@ -53,6 +53,7 @@ def prune(rose: Rose):
 def eval(rose: Rose):
     q = [rose]
     f: dict[str, Rose] = {}
+    b = False
     while q != []:
         r = q.pop()
         h = r.data.history
@@ -64,6 +65,7 @@ def eval(rose: Rose):
                 if g.finished():
                     r.data     = g
                     r.children = []
+                    b = True
                     break
                 else:
                     n = Rose(g)
@@ -75,8 +77,10 @@ def eval(rose: Rose):
             if n != None:
                 r.data.board = n.data.board
                 r.data.history += n.data.history[len(h):]
-        if r.data.finished() and r.father != None and  prunable(r.father,r):
+            b = True
+        if b and r.father != None and  prunable(r.father,r):
             f.update(prune(r.father))
+        b = False
 
 def benchmark():
     start = time()
