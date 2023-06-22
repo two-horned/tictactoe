@@ -2,7 +2,7 @@
 
 class Rose:
     def __init__(self,data):
-        self.father: list[Rose]   = []
+        self.father: None|Rose    = None
         self.data                 = data
         self.children: list[Rose] = []
 

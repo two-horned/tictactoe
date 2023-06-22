@@ -1,84 +1,77 @@
 # C: Said Kadrioski <said@kadrioski.de>
 
+from time import time
 from game import Game
 from rose import Rose
 from copy import deepcopy
+
+OPTIMIZED = True
 
 def decide(rose: Rose) -> Game:
     eval(rose)
     print(rose.data.history)
     return rose.leaves()[0].data
 
-def prune(q: list[Rose]):
+def allfinished(rose: Rose):
+    b = True
+    for i in rose.children:
+        b = b and i.data.finished()
+    return b
+
+def minmax(rose: Rose):
+    n = rose.children[0]
+    if rose.data.player() == 1:
+        for i in rose.children:
+            if n.data.whowon() < i.data.whowon():
+                n = i
+    else:
+        for i in rose.children:
+            if i.data.whowon() < n.data.whowon():
+                n = i
+    return n
+
+def prune(rose: Rose):
+    q = [rose]
+    f: dict[str, Rose] = {}
     while q != []:
         r = q.pop()
-        if r.data.history == [1,-9]:
-            print(list(map(dddd,r.children)))
-        if r.children != []:
-            n = r.children[0]
-            if r.data.player() == 1:
-                for i in r.children:
-                    if n.data.whowon() < i.data.whowon():
-                        n = i
-            else:
-                for i in r.children:
-                    if i.data.whowon() < n.data.whowon():
-                        n = i
-            for i in r.children:
-                i.father.remove(r)
-            r.data = n.data
-            r.children = []
-        for p in r.father:
-            b = True
-            for i in p.children:
-                b = b and i.data.finished()
-            if b:
-                q.append(p)
+        h = str(sorted(r.data.history))
+        f.update({h : r})
+        r.data = minmax(r).data
+        r.children = []
+        if r.father != None and allfinished(r.father):
+            q.append(r.father)
+    return f
 
 def eval(rose: Rose):
-    q: list[Rose] = [rose]
+    q = [rose]
     f: dict[str, Rose] = {}
-    c: list[Rose] = []
     while q != []:
-        t: list[Rose] = []
         r = q.pop()
-        h = deepcopy(r.data.history)
-        h.sort()
-        if True or str(h) not in f:
-            f.update({str(h): r})
+        h = r.data.history
+        if not OPTIMIZED or str(sorted(h)) not in f:
             s = r.data.showfree()
             for i in s:
-                g = deepcopy(r.data)
+                g: Game = deepcopy(r.data)
                 g.choose(i)
                 if g.finished():
                     r.data     = g
                     r.children = []
-                    t = []
                     break
                 else:
                     n = Rose(g)
-                    t.append(n)
-            for n in t:
-                n.father.append(r)
-                r.children.append(n)
-            q+=t
+                    n.father = r
+                    r.children.append(n)
+            q += r.children
         else:
-            n = f.get(str(h))
+            n = f.get(str(sorted(h)))
             if n != None:
-                for p in r.father:
-                    p.children.remove(r)
-                    p.children.append(n)
-                    if p not in n.father:
-                        n.father.append(p)
-                r = n
-        if r.data.finished():
-            for p in r.father:
-                b = True
-                for i in p.children:
-                    b = b and i.data.finished()
-                if b:
-                    c.append(p)
-        prune(c)
+                h += n.data.history[len(h):]
+                r.data = deepcopy(n.data)
+                r.data.history = h
+
+        if r.data.finished() and r.father != None and allfinished(r.father):
+            f.update(prune(r.father))
 
 # Functions used for validating, no significance
 def dddd(r):
@@ -96,13 +89,11 @@ def fdfd(r):
     else:
         return len(r.children)
 
-#r = Rose(Game([-4], [[1,1,0], [-1,-1,0], [0,0,0]]))
-r = Rose(Game())
-#print(r.data)
-eval(r)
-l = r.leaves()
-print(list(map(dddd,l)))
-print(list(map(wwww,l)))
-#print(list(map(ffff,l)))
-#print(list(map(fdfd,l)))
-#print(r.data)
+def benchmark():
+    start = time()
+    r = Rose(Game())
+    eval(r)
+    end = time()
+    print(end - start)
+
+benchmark()

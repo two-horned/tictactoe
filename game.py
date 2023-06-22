@@ -38,17 +38,14 @@ class Game:
         b = True
         if w[0] == w[2] and 1 < len(s):
             s -= {7,8,9}
-            return s
         for i in range(3):
             b = b and w[0][i] == w[2][i]
         if b:
             s -= {3,6,9}
-            return s
         if w[0][1] == w[1][0] and w[1][2] == w[2][1] and w[0][2] == w[2][0]:
             s -= {4,7,8}
         if w[0][1] == w[1][2] and w[1][0] == w[2][1] and w[0][0] == w[2][2]:
             s -= {6,8,9}
-            return s
         return list(s)
 
     def whowon(self):
