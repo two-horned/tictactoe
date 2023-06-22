@@ -69,8 +69,7 @@ def eval(rose: Rose):
                     break
                 else:
                     n = Rose(g)
-                    n.father = r
-                    r.children.append(n)
+                    r.makechild(n)
             q += r.children
         else:
             n = f.get(str(sorted(h)))
