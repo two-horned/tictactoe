@@ -76,9 +76,8 @@ def eval(rose: Rose):
         else:
             n = f.get(str(sorted(h)))
             if n != None:
-                h += n.data.history[len(h):]
-                r.data = deepcopy(n.data)
-                r.data.history = h
+                r.data.board = n.data.board
+                r.data.history += n.data.history[len(h):]
 
         if r.data.finished() and r.father != None and allfinished(r.father):
             f.update(prune(r.father))
