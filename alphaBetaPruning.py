@@ -30,7 +30,7 @@ def allfinished(rose: Rose):
 
 def minmax(rose: Rose):
     n = rose.children[0]
-    if rose.data.player() == 1:
+    if rose.data.player() > 0:
         for i in rose.children:
             if n.data.whowon() < i.data.whowon():
                 n = i
@@ -90,7 +90,7 @@ def benchmark():
     return (r,end - start)
 
 def test():
-    print("World's fastest tic tac toe solver")
+    print("World's fastest iterative tic tac toe solver")
     print("Look how much time it needed to solve the whole game tree:")
     b = benchmark()
     print("time needed: {}".format(b[1]))
