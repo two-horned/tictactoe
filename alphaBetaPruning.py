@@ -5,12 +5,13 @@ from game import Game
 from rose import Rose
 from copy import deepcopy
 
-OPTIMIZED = True
-
 def decide(rose: Rose) -> Game:
     eval(rose)
-    print(rose.data.history)
-    return rose.leaves()[0].data
+    print("This is the best path I see: {}".format(rose.data.history))
+    g = rose.data
+    if len(g.history) < 2:
+        quit("there was nothing to do")
+    return g.history[1]
 
 def allfinished(rose: Rose):
     b = True
@@ -49,8 +50,8 @@ def eval(rose: Rose):
     while q != []:
         r = q.pop()
         h = r.data.history
-        if not OPTIMIZED or str(sorted(h)) not in f:
-            s = r.data.showfree()
+        if str(sorted(h)) not in f:
+            s = r.data.symmshowfree()
             for i in s:
                 g: Game = deepcopy(r.data)
                 g.choose(i)
@@ -73,27 +74,17 @@ def eval(rose: Rose):
         if r.data.finished() and r.father != None and allfinished(r.father):
             f.update(prune(r.father))
 
-# Functions used for validating, no significance
-def dddd(r):
-   return r.data.history
-
-def wwww(r):
-   return r.data.whowon()
-
-def ffff(r):
-    return r.data.finished()
-
-def fdfd(r):
-    if r.data.finished():
-        return ""
-    else:
-        return len(r.children)
-
 def benchmark():
     start = time()
     r = Rose(Game())
     eval(r)
     end = time()
-    print(end - start)
+    return (r,end - start)
 
-benchmark()
+def test():
+    print("World's fastest tic tac toe solver")
+    print("Look how much time it needed to solve the whole game tree:")
+    b = benchmark()
+    print("time needed: {}".format(b[1]))
+    print("best path: {}".format(b[0].data.history))
+test()

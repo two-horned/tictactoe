@@ -1,3 +1,5 @@
+# C: Said Kadrioski <said@kadrioski.de>
+
 from game import Game
 from rose import Rose
 from alphaBetaPruning import decide
@@ -39,16 +41,7 @@ def bot_play(g: Game):
     if g.history != []:
         h = [g.history[-1]]
     r = Rose(Game(h,g.board))
-    d = decide(r)
-    if len(d.history) > 1:
-        e = abs(d.history[1])
-    else:
-        print("OH NO!")
-        e = g.symmshowfree()[1]
-    if not g.choose(e):
-        print("Something went super wrong!")
-        q()
-    return e
+    return decide(r)
 
 def main():
     print("Enter 0 to quit")
