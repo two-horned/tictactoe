@@ -56,8 +56,8 @@ def eval(rose: Rose):
     b = False
     while q != []:
         r = q.pop()
-        h = r.data.history
-        if str(sorted(h)) not in f:
+        h = str(sorted(r.data.history))
+        if h not in f:
             s = r.data.symmshowfree()
             for i in s:
                 g: Game = deepcopy(r.data)
@@ -72,10 +72,10 @@ def eval(rose: Rose):
                     r.makechild(n)
             q += r.children
         else:
-            n = f.get(str(sorted(h)))
+            n = f.get(h)
             if n != None:
                 r.data.board = n.data.board
-                r.data.history += n.data.history[len(h):]
+                r.data.history += n.data.history[len(r.data.history):]
             b = True
         if b and r.father != None and  prunable(r.father,r):
             f.update(prune(r.father))
