@@ -2,7 +2,7 @@
 
 from game import Game
 from rose import Rose
-from alphaBetaPruning import decide
+from alphaBetaPruning import decide,decidefirst
 
 def q():
     quit("Exiting...")
