@@ -5,6 +5,15 @@ from game import Game
 from rose import Rose
 from copy import deepcopy
 
+def decidefirst() -> int:
+    rose = Rose(Game())
+    eval(Rose(Game()))
+    print("This is the best path I see: {}".format(rose.data.history))
+    g = rose.data
+    if len(g.history) < 1:
+        quit("there was nothing to do")
+    return abs(g.history[0])
+
 def decide(rose: Rose) -> int:
     eval(rose)
     print("This is the best path I see: {}".format(rose.data.history))

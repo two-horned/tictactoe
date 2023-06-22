@@ -57,7 +57,10 @@ def main():
         if g.player() == p or b:
             e = player_play(g)
         else:
-            e = bot_play(g)
+            if g.history == []:
+                e = decidefirst()
+            else:
+                e = bot_play(g)
         print("Choice {}".format(e))
         if (g.whowon() != 0):
             break
