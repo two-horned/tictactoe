@@ -37,16 +37,18 @@ def minmax(rose: Rose):
                 n = i
     return n
 
+def mkstr(history: list[int]):
+    return str(sorted(history))
+
 def prune(rose: Rose):
     q = [rose]
     f: dict[str, Rose] = {}
     while q != []:
         r = q.pop()
-        h = str(sorted(r.data.history))
-        f.update({h : r})
+        f.update({mkstr(r.data.history) : r})
         r.data = minmax(r).data
         r.children = []
-        if r.father != None and  prunable(r.father,r): 
+        if r.father != None and prunable(r.father,r): 
             q.append(r.father)
     return f
 
@@ -56,7 +58,7 @@ def eval(rose: Rose):
     b = False
     while q != []:
         r = q.pop()
-        h = str(sorted(r.data.history))
+        h = mkstr(r.data.history)
         if h not in f:
             s = r.data.symmshowfree()
             for i in s:
@@ -69,7 +71,7 @@ def eval(rose: Rose):
                     break
                 else:
                     n = Rose(g)
-                    r.makechild(n)
+                    r.mkchild(n)
             q += r.children
         else:
             n = f.get(h)

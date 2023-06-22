@@ -17,12 +17,12 @@ class Rose:
                 q.append(j)
         return l
 
-    def makechild(self,child: 'Rose'):
+    def mkchild(self,child: 'Rose'):
         child.father = self
         self.children.append(child)
 
-    def makefather(self,father: 'Rose'):
-        father.makechild(self)
+    def mkfather(self,father: 'Rose'):
+        father.mkchild(self)
 
     def __str__(self):
         s = str(self.data)
