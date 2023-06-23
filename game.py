@@ -17,7 +17,7 @@ class Game:
             f = self.board[index//3][index%3]
             if f == 0:
                 self.board[index//3][index%3] = p
-                list.append(self.history, p * (index+1))
+                self.history.append(p * (index+1))
                 return True
         return False
 
