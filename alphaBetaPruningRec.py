@@ -32,11 +32,10 @@ def eval(game: Game):
     game.board = n.board
 
 def benchmark():
-    start = time()
     g = Game()
-    g.choose(1)
-    end = time()
+    start = time()
     eval(g)
+    end = time()
     return (g,end - start)
 
 def test():

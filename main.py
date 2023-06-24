@@ -1,7 +1,8 @@
 # C: Said Kadrioski <said@kadrioski.de>
 
-from game import Game, reproduce
+from game import Game
 from rose import Rose
+from copy import deepcopy
 from alphaBetaPruningRec import eval as evr
 from alphaBetaPruning import eval as evi
 
@@ -47,19 +48,17 @@ def player_play(g: Game):
 
 def bot_play(game: Game, algorithm: bool):
     l = len(game.history)
-    g = reproduce(game)
+    g = deepcopy(game)
     if algorithm:
         r = Rose(g)
+        print("using iterative algorithm...")
         evi(r)
         g = r.data
     else:
+        print("using recursive algorithm...")
         evr(g)
-    e = g.history[l:l+1][0]
-    if not g.choose(e):
-        print(g)
-        print(e)
-        print(g.history)
-        quit("BIG ERROR")
+    e = abs(g.history[l:l+1][0])
+    game.choose(e)
     return e
 
 def main():
