@@ -1,17 +1,8 @@
 # C: Said Kadrioski <said@kadrioski.de>
 
 from time import time
-from game import Game,reproduce
-
-def decidefirst():
-    g = Game()
-    eval(g)
-    return g.history[0]
-
-def decide(game: Game):
-    g = reproduce(game.history)
-    eval(g)
-    return abs(g.history[1])
+from game import Game
+from copy import deepcopy
 
 def eval(game: Game):
     s: list[int] = game.symmshowfree()
@@ -19,7 +10,7 @@ def eval(game: Game):
         return None
     l: list[Game] = []
     for i in s:
-        g = reproduce(game.history)
+        g = deepcopy(game)
         g.choose(i)
         if g.whowon() != 0:
             game.history = g.history
@@ -43,8 +34,9 @@ def eval(game: Game):
 def benchmark():
     start = time()
     g = Game()
-    eval(g)
+    g.choose(1)
     end = time()
+    eval(g)
     return (g,end - start)
 
 def test():
@@ -53,4 +45,6 @@ def test():
     b = benchmark()
     print("time needed: {}".format(b[1]))
     print("best path: {}".format(b[0].history))
-test()
+
+if __name__ == "__main__":
+    test()

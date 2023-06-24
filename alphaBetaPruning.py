@@ -1,25 +1,9 @@
 # C: Said Kadrioski <said@kadrioski.de>
 
 from time import time
-from game import Game, reproduce
+from game import Game
 from rose import Rose
-
-def decidefirst() -> int:
-    rose = Rose(Game())
-    eval(Rose(Game()))
-    print("This is the best path I see: {}".format(rose.data.history))
-    g = rose.data
-    if len(g.history) < 1:
-        quit("there was nothing to do")
-    return abs(g.history[0])
-
-def decide(rose: Rose) -> int:
-    eval(rose)
-    print("This is the best path I see: {}".format(rose.data.history))
-    g = rose.data
-    if len(g.history) < 2:
-        quit("there was nothing to do")
-    return abs(g.history[1])
+from copy import deepcopy
 
 def prunable(rose: Rose,child: Rose):
     return rose.children[0] == child
@@ -61,7 +45,7 @@ def eval(rose: Rose):
         if h not in f:
             s = r.data.symmshowfree()
             for i in s:
-                g: Game = reproduce(r.data.history)
+                g = deepcopy(r.data)
                 g.choose(i)
                 if g.finished():
                     r.data     = g
@@ -83,8 +67,9 @@ def eval(rose: Rose):
         b = False
 
 def benchmark():
+    g = Game()
+    r = Rose(g)
     start = time()
-    r = Rose(Game())
     eval(r)
     end = time()
     return (r,end - start)
@@ -95,4 +80,6 @@ def test():
     b = benchmark()
     print("time needed: {}".format(b[1]))
     print("best path: {}".format(b[0].data.history))
-test()
+
+if __name__ == "__main__":
+    test()

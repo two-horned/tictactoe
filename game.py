@@ -1,5 +1,4 @@
 # C: Said Kadrioski <said@kadrioski.de>
-
 class Game:
     def __init__(self,history=[],board=[[0 for _ in range(3)] for _ in range(3)]):
         self.history: list[int]     = history
@@ -86,7 +85,6 @@ class Game:
         print("Game finished winner is player {}".format(self.whowon()))
         print(self)
 
-
 def ftos(field):
     match field:
         case 1:
@@ -94,9 +92,3 @@ def ftos(field):
         case -1:
             return "O"
     return "."
-
-def reproduce(history):
-    g = Game()
-    for i in history:
-        g.choose(i)
-    return g
