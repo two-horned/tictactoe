@@ -36,7 +36,7 @@ def alg():
         e = int(input("Choose Algorithm (Iterative: 1 or Recursive: 2): ")) * -2 + 3
         if e == 3:
             q()
-    return e != 2
+    return e == 1
 
 def player_play(g: Game):
     e = 0
