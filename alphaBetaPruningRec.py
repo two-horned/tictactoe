@@ -1,8 +1,7 @@
 # C: Said Kadrioski <said@kadrioski.de>
 
 from time import time
-from game import Game
-from copy import deepcopy
+from game import Game,reproduce
 
 def decidefirst():
     g = Game()
@@ -10,7 +9,7 @@ def decidefirst():
     return g.history[0]
 
 def decide(game: Game):
-    g = deepcopy(game)
+    g = reproduce(game.history)
     eval(g)
     return abs(g.history[1])
 
@@ -20,7 +19,7 @@ def eval(game: Game):
         return None
     l: list[Game] = []
     for i in s:
-        g = deepcopy(game)
+        g = reproduce(game.history)
         g.choose(i)
         if g.whowon() != 0:
             game.history = g.history

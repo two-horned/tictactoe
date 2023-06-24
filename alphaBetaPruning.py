@@ -1,9 +1,8 @@
 # C: Said Kadrioski <said@kadrioski.de>
 
 from time import time
-from game import Game
+from game import Game, reproduce
 from rose import Rose
-from copy import deepcopy
 
 def decidefirst() -> int:
     rose = Rose(Game())
@@ -62,7 +61,7 @@ def eval(rose: Rose):
         if h not in f:
             s = r.data.symmshowfree()
             for i in s:
-                g: Game = deepcopy(r.data)
+                g: Game = reproduce(r.data.history)
                 g.choose(i)
                 if g.finished():
                     r.data     = g
