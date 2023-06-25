@@ -18,14 +18,21 @@ def eval(game: Game):
             return None
         l.append(g)
     n = l[0]
+    eval(n)
     if game.player() > 0:
-        for i in l:
+        for i in l[1:]:
             eval(i)
+            if i.whowon() == 1:
+                n = i
+                break
             if n.whowon() < i.whowon():
                 n = i
     else:
-        for i in l:
+        for i in l[1:]:
             eval(i)
+            if i.whowon() == -1:
+                n = i
+                break
             if i.whowon() < n.whowon():
                 n = i
     game.history = n.history

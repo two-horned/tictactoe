@@ -12,10 +12,14 @@ def minmax(rose: Rose):
     n = rose.children[0]
     if rose.data.player() > 0:
         for i in rose.children:
+            if i.data.whowon() == 1:
+                return i
             if n.data.whowon() < i.data.whowon():
                 n = i
     else:
         for i in rose.children:
+            if i.data.whowon() == -1:
+                return i
             if i.data.whowon() < n.data.whowon():
                 n = i
     return n
@@ -25,19 +29,25 @@ def mkstr(history: list[int]):
 
 def prune(rose: Rose):
     q = [rose]
-    f: dict[str, Rose] = {}
+    f: dict[str, Rose|None] = {}
     while q != []:
         r = q.pop()
         f.update({mkstr(r.data.history) : r})
         r.data = minmax(r).data
         r.children = []
-        if r.father != None and prunable(r.father,r): 
-            q.append(r.father)
+        if r.father != None:
+            if r.data.whowon() == r.father.data.player():
+                for i in r.father.children:
+                    f.update({mkstr(i.data.history) : None})
+                q.append(r.father)
+            else:
+                if prunable(r.father,r): 
+                    q.append(r.father)
     return f
 
 def eval(rose: Rose):
     q = [rose]
-    f: dict[str, Rose] = {}
+    f: dict[str, Rose|None] = {}
     b = False
     while q != []:
         r = q.pop()
@@ -61,7 +71,7 @@ def eval(rose: Rose):
             if n != None:
                 r.data.board = n.data.board
                 r.data.history += n.data.history[len(r.data.history):]
-            b = True
+                b = True
         if b and r.father != None and  prunable(r.father,r):
             f.update(prune(r.father))
         b = False
