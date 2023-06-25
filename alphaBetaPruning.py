@@ -39,6 +39,7 @@ def prune(rose: Rose):
             if r.data.whowon() == r.father.data.player():
                 for i in r.father.children:
                     f.update({mkstr(i.data.history) : None})
+                r.father.children = [r]
                 q.append(r.father)
             else:
                 if prunable(r.father,r): 
