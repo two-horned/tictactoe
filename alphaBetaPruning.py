@@ -10,6 +10,8 @@ def prunable(rose: Rose,child: Rose):
 
 def minmax(rose: Rose):
     n = rose.children[0]
+    if n.data.whowon() == rose.data.player():
+        return n
     if rose.data.player() > 0:
         for i in rose.children:
             if i.data.whowon() == 1:

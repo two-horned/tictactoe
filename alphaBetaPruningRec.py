@@ -4,44 +4,60 @@ from time import time
 from game import Game
 from copy import deepcopy
 
-def eval(game: Game):
-    s: list[int] = game.symmshowfree()
-    if s == []:
-        return None
-    l: list[Game] = []
-    for i in s:
-        g = deepcopy(game)
-        g.choose(i)
-        if g.whowon() != 0:
-            game.history = g.history
-            game.board = g.board
-            return None
-        l.append(g)
-    n = l[0]
-    eval(n)
-    if game.player() > 0:
-        for i in l[1:]:
-            eval(i)
-            if i.whowon() == 1:
-                n = i
-                break
-            if n.whowon() < i.whowon():
-                n = i
-    else:
-        for i in l[1:]:
-            eval(i)
-            if i.whowon() == -1:
-                n = i
-                break
-            if i.whowon() < n.whowon():
-                n = i
-    game.history = n.history
-    game.board = n.board
+class Evaluater:
+    def __init__(self) -> None:
+        self.forbidden: dict[str, Game] = dict()
+
+    def minmax(self, player: int, game_list: list[Game]) -> Game:
+        n = self.eval(game_list[0])
+        if n.whowon() == player:
+            return n
+        if player > 0:
+            for i in game_list[1:]:
+                i = self.eval(i)
+                if i.whowon() == 1:
+                    return i
+                if i.whowon() > n.whowon():
+                    n = i
+        else:
+            for i in game_list[1:]:
+                i = self.eval(i)
+                if i.whowon() == -1:
+                    return i
+                if i.whowon() < n.whowon():
+                    n = i
+        return n
+
+    def eval(self, game: Game):
+        s: list[int] = game.symmshowfree()
+        h = mkstr(game.history)
+        if h in self.forbidden:
+            n = self.forbidden[h]
+            game.board = n.board
+            game.history += n.history[len(game.history):]
+            return game
+        if s != []:
+            l: list[Game] = []
+            for i in s:
+                g = deepcopy(game)
+                g.choose(i)
+                if g.whowon() != 0:
+                    return g
+                l.append(g)
+            game = self.minmax(game.player(), l)
+        self.forbidden.update({h : game })
+        return game
+
+def mkstr(history: list[int]):
+    return str(sorted(history))
+
+
 
 def benchmark():
     g = Game()
+    e = Evaluater();
     start = time()
-    eval(g)
+    g = e.eval(g)
     end = time()
     return (g,end - start)
 

@@ -3,8 +3,10 @@
 from game import Game
 from rose import Rose
 from copy import deepcopy
-from alphaBetaPruningRec import eval as evr
+from alphaBetaPruningRec import Evaluater
 from alphaBetaPruning import eval as evi
+
+evaluater = Evaluater();
 
 def q():
     quit("Exiting...")
@@ -56,8 +58,8 @@ def bot_play(game: Game, algorithm: bool):
         g = r.data
     else:
         print("using recursive algorithm...")
-        evr(g)
-    e = abs(g.history[l:l+1][0])
+        g = evaluater.eval(game)
+    e = abs(g.history[l:][0])
     game.choose(e)
     return e
 
