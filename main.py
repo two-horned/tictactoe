@@ -58,7 +58,7 @@ def bot_play(game: Game, algorithm: bool):
         g = r.data
     else:
         print("using recursive algorithm...")
-        g = evaluater.eval(game)
+        g = evaluater.eval(g)
     e = abs(g.history[l:][0])
     game.choose(e)
     return e
